@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+>
+  <TableRow>
+    <TextView
+        android:text="Show Reconciled Transactions Checkbox:"
+        android:paddingRight="5dp"
+    />
+    <TextView android:id="@+id/reconciled_checkbox"
+    />
+  </TableRow>
+  <TableRow>
+    <TextView
+        android:text="Show Password Checkbox:"
+        android:paddingRight="5dp"
+    />
+    <TextView android:id="@+id/password_checkbox"
+    />
+  </TableRow>
+</TableLayout>
