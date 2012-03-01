@@ -22,4 +22,4 @@ http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_
 
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/edit_screen.jpg http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/edit_screen_menu.jpg
 
-http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/list_sorting_options.jpg ttp://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/sorting_preference_screen_menu.jpg
+http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/list_sorting_options.jpg http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/sorting_preference_screen_menu.jpg
