@@ -1,6 +1,6 @@
 #summary Some examples of the project code
 
-= getWritableDatabase Class =
+= getWritableDatabase method in extended SQLiteOpenHelper class =
 
 {{{
 /**
@@ -46,9 +46,47 @@
 }}}
 
 
-= Details =
+= List Activity onResume Method =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+/**
+   * Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for
+   * your activity to start interacting with the user.
+   * 
+   * This is a good place to begin animations, open exclusive-access devices
+   * (such as the camera), etc.
+   * 
+   * the data is refreshed
+   * 
+   */
+  @Override
+  protected void onResume() {
+    /* query sorting options */
+    super.onResume();
+    try {
+      if (this.blSaveNew == true) {
+        // call the entry activity again
+        this.blSaveNew = false;
+        Intent intentInsrt = new Intent(Music_List.this, AddEditMusic.class);
+        intentInsrt.putExtra("SHOW_SAVENEW", true);
+        startActivityForResult(intentInsrt, ACTIVITY_CREATE);
+
+        return;
+      }// end if (blSaveNew == true)
+
+      //set database query class object
+      this.dbAppDbObj = new MyAppDbSQL(this);
+      
+      Music_List.getSortOption(Music_List.this);
+
+      this.fillData();
+
+      this.registerForContextMenu(this.getListView());
+    } catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          Music_List.this);
+      errExcpError.addToLogFile(error, "Music_List.resumeData", "");
+      errExcpError = null;
+    }// end try/catch (Exception error)
+  }// end onResume
+}}}
