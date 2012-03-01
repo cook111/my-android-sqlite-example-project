@@ -18,7 +18,7 @@ Furthermore, beyond educating developers, another goal in this project is to pro
 
 = Screenshots =
 
-http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen.jpg     http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen_menu.jpg
+http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen.jpg  http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen_menu.jpg
 
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/edit_screen.jpg  http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/edit_screen_menu.jpg
 
