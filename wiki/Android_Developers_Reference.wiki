@@ -1,6 +1,7 @@
 #summary Some useful diagrams and reference information for Android Developers.
 
-= Info =
+= _Info_ =
+_no reference material yet_
 
 = _Diagrams_ =
 
