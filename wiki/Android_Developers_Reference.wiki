@@ -8,6 +8,7 @@ Android System Architecture:
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/android_dev_docs/system-architecture.jpg
 
 Android Activity Life Cycle:
+
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/android_dev_docs/activity_lifecycle.png
 
 Android Activity Life Cycle with Instance Save/Restore:
