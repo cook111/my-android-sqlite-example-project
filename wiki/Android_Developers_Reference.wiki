@@ -2,7 +2,7 @@
 
 = Info =
 
-= Diagrams =
+= _Diagrams_ =
 
 ==*Android System Architecture:*==
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/android_dev_docs/system-architecture.jpg
