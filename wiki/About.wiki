@@ -13,9 +13,6 @@ Since this project is meant to help beginning developers, educate developers on 
 Furthermore, beyond educating developers, another goal in this project is to provide useful code that can be reused in other projects to help developers reduce their development time.
 
 
-= Code Snippets =
-
-
 = Screenshots =
 
 http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen.jpg  http://my-android-sqlite-example-project.googlecode.com/svn/wiki/about/app_main_screen_menu.jpg
