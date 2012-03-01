@@ -91,7 +91,7 @@
   }// end onResume
 }}}
 
-=MyDisplayAlert Class=
+= _MyDisplayAlert Class_ =
 
 {{{
 import android.app.AlertDialog;
