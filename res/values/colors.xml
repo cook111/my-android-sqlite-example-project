@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<resources>
+    <color name="opaque_red">#f00</color>
+    <color name="opaque_blue">#00f</color>
+    <color name="translucent_red">#80ff0000</color>
+    <color name="transparent">#00000000</color>
+    <color name="lightgrey">#A0A0A0</color>
+    <color name="white">#000</color>
+    <color name="green">#0F0</color>
+    <color name="lightblue">#0F0</color>
+    <color name="lightgreen">#68c9ff</color>
+    <color name="lightyellow">#ffffc9</color>
+    <color name="orange">#ff6600</color>
+    
+    <drawable name="selector_green">#f0f0</drawable> 
+    <drawable name="lightyellow">#ffffc9</drawable>
+    <drawable name="lightgreen">#68c9ff</drawable>
+    <drawable name="orange">#ff6600</drawable>
+</resources>
