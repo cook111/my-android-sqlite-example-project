@@ -2,405 +2,489 @@
 #labels SourceCode
 
 {{{
-import java.io.File;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
-import android.util.Log;
-import com.my_company.app_template.CustAlrtMsgOptnListener.MessageCodes;
 
 /**
- * Application Database Access Helper class. Defines the basic CRUD operations
- * for this application.
+ * Application Database Actions class. 
  * 
- * Executes the database tables SQL create scripts.
+ * Executes the database actions such as insert, update, delete, etc.
  * 
- * @extends SQLiteOpenHelper
  * 
  * @constructor context
  * 
  */
-public class MyAppDbAdapter extends SQLiteOpenHelper {
-  // database info
-  private static final String MY_DATABASE_NAME = "musicDB.db";
-  private static final String MY_INTERNAL_DATABASE_FOLDER = "myMusicList";
-  private static final String DATABASE_PATH_EXTERNAL = Environment
-      .getExternalStorageDirectory().toString()
-      + File.separator + "myMusicList";
-  private String dbPathToUse = DATABASE_PATH_EXTERNAL;
 
-  // change this if the database structure gets changes and needs to be updated.
-  private static final int DATABASE_VERSION = 1;
-
-  // db table/field refs
-  protected static final String KEY_ROWID = "_id";
-
-  protected static final String MY_MUSIC_DB_TABLE = "music_table";
-  protected static final String KEY_ALBUM = "album";
-  protected static final String KEY_ALBUMDATE = "pubdate";
-  protected static final String KEY_ARTIST = "artist";
-  protected static final String KEY_GENRE = "genre";
-  protected static final String KEY_SONG_TITLE = "song";
-  protected static final String KEY_NOTES = "entrynotes";
-
-  protected static final String MY_PREFS_DB_TABLE = "myappprefs";
-  protected static final String KEY_PREFNAME = "prefname";
-  protected static final String KEY_PREFVALUE = "prefvalue";
-  protected static final String KEY_PREFDESCR = "prefdescr";
-
-  private static final String TAG = "MyAppDbAdapter";
-
-  private Context mCtx;
-  private SQLiteDatabase mDb;
-  protected MyAppDbAdapter objMusicDbAdapterRef;
-
-  private MyDisplayAlertClass objDisplayAlertClass;
-
-  /*
-   * DATABASE CREATE STATEMENTS
-   */
+public class MyAppDbSQL {
+  private MyAppDbAdapter dbAdapterObj;
+  private SQLiteDatabase sqliteDBObj;
+  private Context ctxContext;
 
   /**
-   * Template Database table creation sql statement
+   * MyAppDbSQL Class Constructor
    */
-
-  private static final String MY_MUSIC_DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS "
-      + MY_MUSIC_DB_TABLE
-      + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + KEY_ARTIST
-      + " TEXT NOT NULL DEFAULT '', "
-      + KEY_ALBUM
-      + " TEXT NOT NULL DEFAULT '', "
-      + KEY_SONG_TITLE
-      + " TEXT NOT NULL DEFAULT '', "
-      + KEY_GENRE
-      + " TEXT NOT NULL DEFAULT '', "
-      + KEY_ALBUMDATE
-      + " TEXT NOT NULL DEFAULT '', " + KEY_NOTES + " TEXT);";
-
-  /**
-   * Application Preferences Database table creation sql statement
-   */
-  private static final String MY_PREFS_DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS "
-      + MY_PREFS_DB_TABLE
-      + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + "prefname TEXT NOT NULL DEFAULT '', "
-      + "prefvalue TEXT NOT NULL DEFAULT '', " + "prefdescr TEXT);";
-
-  /**
-   * Constructor - takes the context to allow the database to be opened/created
-   * 
-   * @param ctx
-   *          the Context within which to work
-   */
-  MyAppDbAdapter(Context context) {
-    super(context, MyAppDbAdapter.MY_DATABASE_NAME, null,
-        MyAppDbAdapter.DATABASE_VERSION);
+  protected MyAppDbSQL(Context ctxContext) {
     try {
-      this.mCtx = context;
-      this.objMusicDbAdapterRef = this;
-
-      // check for existence of the SD card
-      if (android.os.Environment.getExternalStorageState().equals(
-          android.os.Environment.MEDIA_MOUNTED)
-          && !(Environment.getExternalStorageState()
-              .equals(Environment.MEDIA_MOUNTED_READ_ONLY))) {
-        this.dbPathToUse = DATABASE_PATH_EXTERNAL + File.separator;
-      }// end if
-      else {
-        this.dbPathToUse = context.getDatabasePath(
-            MyAppDbAdapter.MY_INTERNAL_DATABASE_FOLDER).getPath();
-      }// end if sd card exists
-
-      // file might not be created yet, use built path instead
-      File myAppDBDir = new File(this.dbPathToUse);
-      File myAppDB = null;
-
-      // if the directory does not yet exist, create it.
-      if (!myAppDBDir.exists() && !myAppDBDir.isDirectory()) {
-        boolean blMkDirRslt = myAppDBDir.mkdirs();
-
-        if (blMkDirRslt != true) {
-          throw new Exception(
-              "Application data directory could not be created at "
-                  + this.dbPathToUse);
-        } else {
-          myAppDB = new File(this.dbPathToUse + MyAppDbAdapter.MY_DATABASE_NAME);
-        }
-      } else {
-        if (myAppDBDir.exists() && myAppDBDir.isDirectory()) {
-          myAppDB = new File(this.dbPathToUse + MyAppDbAdapter.MY_DATABASE_NAME);
-        }// end if (!myAppDBDir.exists() &&...
-      }// end if (!myAppDBDir.exists() &&...
-
-      if (myAppDB != null) {
-        this.mDb = SQLiteDatabase.openDatabase(this.dbPathToUse
-            + File.separator + MyAppDbAdapter.MY_DATABASE_NAME, null,
-            SQLiteDatabase.CREATE_IF_NECESSARY | SQLiteDatabase.OPEN_READWRITE);
-        
-        if (this.mDb != null) {
-          int version = this.mDb.getVersion();
-          if (version != MyAppDbAdapter.DATABASE_VERSION) {
-            this.mDb.beginTransaction();
-
-            try {
-              if (version == 0) {
-                onCreate(this.mDb);
-              } else {
-                onUpgrade(this.mDb, version, MyAppDbAdapter.DATABASE_VERSION);
-              }
-              this.mDb.setVersion(MyAppDbAdapter.DATABASE_VERSION);
-              this.mDb.setTransactionSuccessful();
-            }// end try statements
-            catch (SQLException error) {
-              MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-                  this.mCtx);
-              errExcpError.addToLogFile(error,
-                  "MyAppDbAdapter.getWritableDatabase",
-                  "attempting to create database tables");
-              errExcpError = null;
-            }// end try/catch (Exception error
-            catch (Exception error) {
-              MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-                  this.mCtx);
-              errExcpError.addToLogFile(error,
-                  "CheckRegDBAdapter.getWritableDatabase",
-                  "attempting to create database tables");
-              errExcpError = null;
-            }// end try/catch (Exception error)
-            finally {
-              this.mDb.endTransaction();
-            }
-          }// end if (version != CheckRegDbAdapter.DATABASE_VERSION)
-        }//end if (this.mDb != null)
-      }
-
-    } catch (SQLiteException error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.MyAppDbAdapter",
-          "SQLiteException - Class constructor");
+      this.ctxContext = ctxContext;
+    } catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbSQL.MyAppDbSQL",
+          "exception thrown in the class constructor");
       errExcpError = null;
-    }// end try/catch (Exception error)
-    catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.MyAppDbAdapter",
-          "Class constructor");
-      errExcpError = null;
-    } finally {
-      DBUtil.safeCloseDataBase(this.mDb);
     }// end try/catch (Exception error)
   }// end constructor
 
   /**
-   * public void onCreate
+   * Database Query methods
+   */
+
+  /**
+   * listOrderByOpts
    * 
-   * Executes SQLite commands to create tables in the database.
+   * @param int intOrderByOpt - the OrderBy Option to return
+   * @return String
    * 
-   * @param: SQLiteDatabase object
+   */
+  protected String listOrderByOpts(int intOrderByOpt) {
+    switch (intOrderByOpt) {
+    case 0:
+      return MyAppDbAdapter.KEY_ALBUM + " ASC";
+
+    case 1:
+      return MyAppDbAdapter.KEY_ALBUM + " DESC";
+
+    case 2:
+      return MyAppDbAdapter.KEY_ARTIST + " ASC";
+
+    case 3:
+      return MyAppDbAdapter.KEY_ARTIST + " DESC";
+
+    case 4:
+      return MyAppDbAdapter.KEY_ALBUMDATE + "  ASC";
+
+    case 5:
+      return MyAppDbAdapter.KEY_ALBUMDATE + " DESC";
+
+    case 6:
+      return MyAppDbAdapter.KEY_GENRE + "  ASC";
+
+    case 7:
+      return MyAppDbAdapter.KEY_GENRE + " DESC";
+
+    default:
+      return MyAppDbAdapter.KEY_ARTIST + " ASC";
+    }// end switch
+  }// end listOrderByOpts
+  
+	protected boolean openDbAdapter() throws Exception {
+	  boolean isOpen = false;
+	  
+		try {
+			if (this.dbAdapterObj == null || !(this.dbAdapterObj.dbIsOpen())) {
+				this.dbAdapterObj = new MyAppDbAdapter(ctxContext);
+				
+				if (this.dbAdapterObj != null) this.sqliteDBObj = this.dbAdapterObj.getReadableDatabase();
+			}// end if (this.dbMusic == null || ...
+
+			if (this.dbAdapterObj.dbIsOpen() && this.sqliteDBObj != null) {
+				isOpen = true;
+			}
+		} catch (Exception error) {
+			MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+			errExcpError.addToLogFile(error, "MyAppDbSQL.openDbAdapter",
+									  "exception thrown opening the db adapter");
+			errExcpError = null;
+
+			isOpen = false;
+		}// end try/catch (Exception error)
+	  
+	  return isOpen;
+	}
+	
+	protected boolean closeDbAdapter() throws Exception {
+		boolean isClosed = false;
+
+		try {
+			// clean up DB objects
+			if (this.sqliteDBObj != null) {
+				this.sqliteDBObj.close();
+				this.sqliteDBObj = null;
+			}
+
+			if (this.dbAdapterObj != null) {
+				this.dbAdapterObj.close();
+				this.dbAdapterObj = null;
+			}
+			
+			isClosed = true;
+		} catch (Exception error) {
+			MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+			errExcpError.addToLogFile(error, "MyAppDbSQL.closeDbAdapter",
+									  "exception thrown closing the db adapter");
+			errExcpError = null;
+
+			isClosed = false;
+		}// end try/catch (Exception error)
+
+		return isClosed;
+	}
+  
+  /**
+   * fetchMusic: Return a Cursor over the list of entries in the database
    * 
-   * @return: void
+   * @param intSortOpt
+   *          the selected sorting option
+   * @return Cursor containing filtered query results
+   * @throws SQLException
+   *           if entry could not be found/retrieved
+   */
+  protected Cursor fetchMusic(int intSortOpt) throws SQLException {
+    String strOrderBy = "";
+    Cursor mMusicCursor = null;
+
+    try {
+        strOrderBy = listOrderByOpts(intSortOpt);
+
+        mMusicCursor = this.sqliteDBObj.query(MyAppDbAdapter.MY_MUSIC_DB_TABLE,
+            new String[] { MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
+                MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
+                MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
+                MyAppDbAdapter.KEY_NOTES }, null, null, null, null, strOrderBy);
+
+        if (mMusicCursor != null) {
+          mMusicCursor.moveToFirst();
+
+          return mMusicCursor;
+      } else {
+        return null;
+      }// end if (mMusicCursor != null)
+    } catch (SQLiteException error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+		errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
+          "SQLiteException - exception thrown fetching music");
+      errExcpError = null;
+
+      return null;
+    } catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+		errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
+								  "exception - exception thrown fetching music");
+      errExcpError = null;
+
+      return null;
+    }// end try/catch (Exception error)
+  }// end fetchMusic(int intSortOpt)
+
+  /**
+   * Return a Cursor positioned at the entry that matches the given rowId
+   * 
+   * @param rowId
+   *          id of entry to retrieve
+   * @return Cursor positioned to matching entry, if found
+   * @throws SQLException
+   *           if entry could not be found/retrieved
+   */
+  protected Cursor fetchListEntry(long rowId) throws SQLException {
+
+    Cursor mCursor = null;
+
+    try {
+        mCursor = this.sqliteDBObj.query(true,
+            MyAppDbAdapter.MY_MUSIC_DB_TABLE, new String[] {
+                MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
+                MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
+                MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
+                MyAppDbAdapter.KEY_NOTES }, MyAppDbAdapter.KEY_ROWID + "="
+                + rowId, null, null, null, null, null);
+
+        if (mCursor != null) {
+          mCursor.moveToFirst();
+
+          return mCursor;
+        } else {
+          return null;
+        }// end if (mCursor != null)
+    } catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.fetchListEntry",
+          "ListEntry query");
+      errExcpError = null;
+
+      return null;
+    }// end try/catch (SQLException error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.fetchListEntry",
+          "ListEntry query");
+      errExcpError = null;
+
+      return null;
+    }// end try/catch (Exception error)
+  }// end fetchListEntry(long rowId)
+  
+  /**
+   * exportTableQuery: Return a Cursor for a specific table in the database
+   * 
+   * @param strTableName
+   *          the specified table
+   *          
+   * @param strOrderBy
+   *          the selected ordering option
+   *          
+   * @return Cursor containing filtered query results
+   * @throws SQLException
+   *           if entry could not be found/retrieved
+   */
+  protected Cursor exportTableQuery(String strTableName, String strOrderBy) {
+    Cursor mMusicCursor = null;
+
+    try {
+        // get everything from the table
+        String strSQL = "SELECT * FROM " + strTableName + " ORDER BY "
+            + strOrderBy;
+
+        mMusicCursor = this.sqliteDBObj.rawQuery(strSQL, null);
+
+        if (mMusicCursor != null) {
+          mMusicCursor.moveToFirst();
+
+          return mMusicCursor;
+        } else {
+          return null;
+        }// end if (mMusicCursor != null
+    } catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.exportTableQuery",
+          "creating export temporary Cursor");
+      errExcpError = null;
+
+      return null;
+    }// end try/catch (SQLException error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.exportTableQuery",
+          "creating export temporary Cursor");
+      errExcpError = null;
+
+      return null;
+    }// end try/catch (Exception error)
+  }// end exportTableQuery
+
+  /**
+   * createMusicEntry: Creates a new entry in the database table
+   * 
+   * @return True if the database insert succeeds
+   * @throws SQLException
+   *           if entry could not be found/retrieved
+   */
+  protected Boolean createMusicEntry(String txtAlbum, String albumdate,
+      String txtartist, String txtgenre, String txtsongname, String txtnotes) {
+    boolean blIsSuccessful = false;
+
+      this.sqliteDBObj.beginTransaction();
+      try {
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(MyAppDbAdapter.KEY_ALBUM, txtAlbum);
+        initialValues.put(MyAppDbAdapter.KEY_ALBUMDATE, albumdate);
+        initialValues.put(MyAppDbAdapter.KEY_ARTIST, txtartist);
+        initialValues.put(MyAppDbAdapter.KEY_GENRE, txtgenre);
+        // initialValues.put(KEY_SONG_TITLE, txtsongname);
+        initialValues.put(MyAppDbAdapter.KEY_NOTES, txtnotes);
+
+        blIsSuccessful = (this.sqliteDBObj.insert(
+            MyAppDbAdapter.MY_MUSIC_DB_TABLE, null, initialValues) != -1);
+
+        if (blIsSuccessful == true) {
+          this.sqliteDBObj.setTransactionSuccessful();
+        }
+      }// end try
+      catch (SQLException error) {
+        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
+            "creating music entry");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      catch (Exception error) {
+        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
+            "creating music entry");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      finally {
+        this.sqliteDBObj.endTransaction();
+      }
+
+    return blIsSuccessful;
+  }// end createMusicEntry
+
+  /**
+   * updateMusicEntry: Updates an existing entry in the database table
+   * 
+   * @return True if the database update succeeds
+   * @throws SQLException
+   *           if entry could not be found/retrieved
+   */
+  protected boolean updateMusicEntry(Long rowId, String strAlbum,
+      String strPubDate, String strArtist, String strGenre,
+      String strSongTitle, String strNotes, String strOrigAlbum,
+      String strOrigPubDate, String strOrigArtist, String strOrigGenre) {
+    boolean blIsSuccessful = false;
+
+      this.sqliteDBObj.beginTransaction();
+      try {
+        ContentValues args = new ContentValues();
+
+        args.put(MyAppDbAdapter.KEY_ALBUM, strAlbum);
+        args.put(MyAppDbAdapter.KEY_ALBUMDATE, strPubDate);
+        args.put(MyAppDbAdapter.KEY_ARTIST, strArtist);
+        args.put(MyAppDbAdapter.KEY_GENRE, strGenre);
+        args.put(MyAppDbAdapter.KEY_NOTES, strNotes);
+
+        blIsSuccessful = (this.sqliteDBObj.update(
+            MyAppDbAdapter.MY_MUSIC_DB_TABLE, args, MyAppDbAdapter.KEY_ROWID
+                + "=" + rowId, null) != -1);
+
+        if (blIsSuccessful == true) {
+          this.sqliteDBObj.setTransactionSuccessful();
+        }
+      }// end try
+      catch (SQLException error) {
+        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
+            "updating music entry information");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      catch (Exception error) {
+        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
+            "updating music entry information");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      finally {
+        this.sqliteDBObj.endTransaction();
+      }
+
+    return blIsSuccessful;
+  }// end updateMusicEntry
+
+  /**
+   * Delete the entries
+   * 
+   * 
+   * @return true if deleted, false otherwise
    * 
    * @throws SQLException
    *           if the SQL scripts encounter issues
    */
-  @Override
-  public void onCreate(SQLiteDatabase db) throws SQLException {
-    try {
-   // Log that getWriteableDatabase was called recursively
-      MyErrorLog<String> errExcpError = new MyErrorLog<String>(
-          this.mCtx);
-      errExcpError.addToLogFile("creating the database tables",
-          "MyAppDbAdapter.onCreate",
-          "no prompt");
-      errExcpError = null;
-      
-      //create the database tables
-      db.execSQL(MY_MUSIC_DATABASE_CREATE);
-      db.execSQL(MY_PREFS_DATABASE_CREATE);
+  protected boolean deleteMusicEntries() throws SQLException {
+    // delete entries
+    boolean blIsSuccessful = false;
 
-    } catch (SQLException error) {
-      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-          this.mCtx);
-      errExcpError.addToLogFile(error, "DatabaseHelper.onCreate",
-          "database Table creates");
-      errExcpError = null;
-    }// end try/catch (SQLException error)
-    catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "DatabaseHelper.onCreate",
-          "creating Table creates");
-      errExcpError = null;
-    }// end try/catch (Exception error)
-  }// end onCreate
+      this.sqliteDBObj.beginTransaction();
+      try {
+        blIsSuccessful = this.sqliteDBObj.delete(
+            MyAppDbAdapter.MY_MUSIC_DB_TABLE, "1", null) > 0;
+        if (blIsSuccessful == true) {
+          this.sqliteDBObj.setTransactionSuccessful();
+        }
+      }// end try
+      catch (SQLException error) {
+        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
+            "deleting music entries");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      catch (Exception error) {
+        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
+            "deleting music entries");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      finally {
+        this.sqliteDBObj.endTransaction();
+      }
+
+    return blIsSuccessful;
+  }// end deleteMusicEntries(String strAcctName)
 
   /**
-   * Handles the logging and SQL scripts for upgrade actions
+   * Delete the Music Entry per the given rowID
    * 
-   * When creating an upgrade, make sure the code here reflects what needs to be
-   * done.
+   * @param rowId
+   *          rowId of the Music Entry in the Music table to be deleted
    * 
-   * For example, if the table structure has been changed
-   * 
-   * @return void
-   * 
-   * @param database
-   * @param oldVersion
-   * @param newVersion
+   * @return true if the delete is successful, false otherwise.
    * 
    * @throws SQLException
    *           if the SQL scripts encounter issues
    */
-  @Override
-  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-      throws SQLException {
-    try {
-      Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-          + newVersion + ".");
+  protected boolean deleteMusicEntry(long rowId) throws SQLException {
+    // delete a single music entry in the music table
+    boolean blIsSuccessful = false;
 
-      if (this.objMusicDbAdapterRef.objDisplayAlertClass != null) {
-        this.objMusicDbAdapterRef.objDisplayAlertClass.cleanUpClassVars();
-        this.objMusicDbAdapterRef.objDisplayAlertClass = null;
-      }// end if (objDisplayAlertClass != null)
-      this.objMusicDbAdapterRef.objDisplayAlertClass = new MyDisplayAlertClass(
-          this.mCtx, new CustAlrtMsgOptnListener(MessageCodes.ALERT_TYPE_MSG),
-          "Upgrading Database", "Upgrading database from version " + oldVersion
-              + " to " + newVersion + ".  Existing Data will be preserved.");
+      this.sqliteDBObj.beginTransaction();
+      try {
+        Cursor crsrListRowData;
 
-      if (oldVersion == 1 && newVersion > 1) {
-        // execute code to handle database changes
-      }// end initial create
-    } catch (SQLException error) {
-      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-          this.mCtx);
-      errExcpError.addToLogFile(error, "DatabaseHelper.onUpgrade",
-          "upgrading the database");
-      errExcpError = null;
-    }// end try/catch (SQLException error)
-    catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "DatabaseHelper.onUpgrade",
-          "upgrading the database");
-      errExcpError = null;
-    }// end try/catch (Exception error)
-  }// end onUpgrade
+        crsrListRowData = fetchListEntry(rowId);
 
-  /**
-   * Create and/or open a database that will be used for reading and writing.
-   * Once opened successfully, the database is cached, so you can call this
-   * method every time you need to write to the database. Make sure to call
-   * close() when you no longer need it.
-   * 
-   * Errors such as bad permissions or a full disk may cause this operation to
-   * fail, but future attempts may succeed if the problem is fixed.
-   * 
-   * Returns a read/write database object valid until close() is called
-   * 
-   * Throws SQLiteException if the database cannot be opened for writing
-   */
+        if (crsrListRowData.getCount() >= 0) {
+          blIsSuccessful = this.sqliteDBObj.delete(
+              MyAppDbAdapter.MY_MUSIC_DB_TABLE, MyAppDbAdapter.KEY_ROWID + "="
+                  + rowId, null) > 0;
+        } else {
+          blIsSuccessful = true;
+        }
 
-  @Override
-  public SQLiteDatabase getWritableDatabase() throws SQLiteException {
-    try {
-      this.mDb = SQLiteDatabase.openDatabase(this.dbPathToUse + File.separator
-          + MyAppDbAdapter.MY_DATABASE_NAME, null,
-          SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.CREATE_IF_NECESSARY);
+        crsrListRowData.close();
+        crsrListRowData = null;
 
-      return this.mDb;
-    } catch (SQLException error) {
-      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-          this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.getWritableDatabase",
-          "SQLException - main try/catch");
-      errExcpError = null;
+        if (blIsSuccessful == true) {
+          this.sqliteDBObj.setTransactionSuccessful();
+        }
+      }// end try
+      catch (SQLException error) {
+        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
+            "deleting music entry");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      catch (Exception error) {
+        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+            this.ctxContext);
+        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
+            "deleting music entry");
+        errExcpError = null;
+        blIsSuccessful = false;
+      }// end try/catch (Exception error)
+      finally {
+        this.sqliteDBObj.endTransaction();
+      }
 
-      return null;
-    }// end try/catch (SQLException error)
-    catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.getWritableDatabase",
-          "main try/catch");
-      errExcpError = null;
-
-      return null;
-    }// end try/catch (Exception error)
-  }// end getWriteableDatabase
-
-  /**
-   * Create and/or open a database.
-   * 
-   * This will be the same object returned by getWritableDatabase() unless some
-   * problem, such as a full disk, requires the database to be opened read-only.
-   * 
-   * In that case, a read-only database object will be returned.
-   * 
-   * If the problem is fixed, a future call to getWritableDatabase() may
-   * succeed, in which case the read-only database object will be closed and the
-   * read/write object will be returned in the future.
-   * 
-   * Returns a database object valid until getWritableDatabase() or close() is
-   * called.
-   * 
-   * Throws SQLiteException if the database cannot be opened
-   * 
-   */
-  @Override
-  public SQLiteDatabase getReadableDatabase() throws SQLiteException {
-    try {
-      this.mDb = SQLiteDatabase
-          .openDatabase(this.dbPathToUse + File.separator
-              + MyAppDbAdapter.MY_DATABASE_NAME, null,
-              SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.CREATE_IF_NECESSARY);
-
-      return this.mDb;
-    }// end try
-    catch (SQLException error) {
-      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-          this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.getReadableDatabase",
-          "main try/catch");
-      errExcpError = null;
-
-      return null;
-    }// end try/catch (SQLException error)
-    catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(this.mCtx);
-      errExcpError.addToLogFile(error, "MyAppDbAdapter.getReadableDatabase",
-          "main try/catch");
-      errExcpError = null;
-
-      return null;
-    }// end try/catch (Exception error)
-  }// end getReadableDatabase
-
-  /**
-   * Close the database.
-   * 
-   * @return void
-   * 
-   * @param none
-   * 
-   */
-  public void close() {
-    if (this.mDb != null && this.mDb.isOpen()) {
-      DBUtil.safeCloseDataBase(this.mDb);
-      this.mDb = null;
-    }
-  }// end close()
-
-  /**
-   * boolean dbIsOpen
-   * 
-   * @return true if the DB is currently open (has not been closed)
-   */
-  protected boolean dbIsOpen() {
-    // check if the database object is open
-    if (this.mDb != null && this.mDb.isOpen())
-      return true;
-    else
-      return false;
-  }// end dbIsOpen
-}// end MyAppDbAdapter class
+    return blIsSuccessful;
+  }// end deleteMusicEntry(long rowId)
+}//end MyAppDbSQL class
 }}}
