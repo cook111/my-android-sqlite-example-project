@@ -1,0 +1,24 @@
+<resources>
+    <string-array name="sortinglistitems">
+        <item>Album Ascending</item>
+        <item>Album Descending</item>
+        <item>Artist Ascending</item>
+        <item>Artist Descending</item>
+        <item>Date Ascending</item>
+        <item>Date Descending</item>
+        <item>Genre Ascending</item>
+        <item>Genre Descending</item>
+    </string-array>
+    
+    <string-array name="sortinglistvalues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    
+</resources>
