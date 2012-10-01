@@ -47,35 +47,46 @@
     // get a cursor of the entries
     // number
     try {
-      this.mEntryCursor = this.dbAppDbObj.fetchMusic(Music_List.intSortOption);
-      this.startManagingCursor(this.mEntryCursor);
+      boolean dbOpenResult = this.dbAppDbObj.openDbAdapter();
 
-      // Create an array to specify the fields we want to display in the list
-      // (only TITLE)
-      String[] from = new String[] { MyAppDbAdapter.KEY_ALBUM,
-          MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
-          MyAppDbAdapter.KEY_GENRE };
+      if (dbOpenResult) {
+        this.mEntryCursor = this.dbAppDbObj
+            .fetchMusic(Music_List.intSortOption);
 
-      // and an array of the fields we want to bind those fields to (in this
-      // case just text1)
-      int[] to = new int[] { R.id.txtalbum, R.id.txtalbumdate, R.id.txtartist,
-          R.id.txtgenre };
+        this.startManagingCursor(this.mEntryCursor);
 
-      // Now create a simple cursor adapter and set it to display
-      this.listRegister = new SimpleCursorAdapter(this, R.layout.musicentryrow,
-          this.mEntryCursor, from, to) {
-        @Override
-        public void setViewText(TextView v, String text) {
-          super.setViewText(v, convText(v, text));
-        }
-      };
-      setListAdapter(this.listRegister);
-      this.getListView().setTextFilterEnabled(false);
-      this.getListView().setFastScrollEnabled(true);
+        boolean dbCloseResult = this.dbAppDbObj.closeDbAdapter();
 
-      this.mEntryCursor.moveToPosition(this.intEntryListPosition);
-      this.getListView().scrollTo(0, this.intEntryListPosition);
-      this.getListView().setSelection(this.intEntryListPosition);
+        if (!dbCloseResult)
+          throw new Exception("The database was not successfully closed.");
+
+        // Create an array to specify the fields we want to display in the list
+        // (only TITLE)
+        String[] from = new String[] { MyAppDbAdapter.KEY_ALBUM,
+            MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
+            MyAppDbAdapter.KEY_GENRE };
+
+        // and an array of the fields we want to bind those fields to (in this
+        // case just text1)
+        int[] to = new int[] { R.id.txtalbum, R.id.txtalbumdate,
+            R.id.txtartist, R.id.txtgenre };
+
+        // Now create a simple cursor adapter and set it to display
+        this.listRegister = new SimpleCursorAdapter(this,
+            R.layout.musicentryrow, this.mEntryCursor, from, to) {
+          @Override
+          public void setViewText(TextView v, String text) {
+            super.setViewText(v, convText(v, text));
+          }
+        };
+        setListAdapter(this.listRegister);
+        this.getListView().setTextFilterEnabled(false);
+        this.getListView().setFastScrollEnabled(true);
+
+        this.mEntryCursor.moveToPosition(this.intEntryListPosition);
+        this.getListView().scrollTo(0, this.intEntryListPosition);
+        this.getListView().setSelection(this.intEntryListPosition);
+      }
     } catch (Exception error) {
       MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
           Music_List.this);
