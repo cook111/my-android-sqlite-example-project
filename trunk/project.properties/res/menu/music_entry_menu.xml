@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/save_menu"
+          android:title="@string/menu_save" 
+          android:icon="@drawable/save_menu_icon" />
+    <item android:id="@+id/savenew_menu"
+          android:title="@string/menu_savenew" 
+          android:icon="@drawable/save_menu_icon" />
+    <item android:id="@+id/cancel_menu"
+          android:title="@string/menu_cancel" 
+          android:icon="@drawable/cancel_menu_icon" />
+    <item android:id="@+id/quit"
+          android:title="@string/menu_quit" 
+          android:icon="@drawable/quit_menu_icon" />
+</menu>
+
