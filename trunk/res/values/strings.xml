@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="hello">Android Component_Test!</string>
-    <string name="app_name">Android Basic Components</string>
-    <string name="sd_card_folder_name">Component_Test</string>
-</resources>
