@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 /**
- * Application Database Actions class. 
+ * Application Database Actions class.
  * 
  * Executes the database actions such as insert, update, delete, etc.
  * 
@@ -79,60 +79,61 @@ public class MyAppDbSQL {
       return MyAppDbAdapter.KEY_ARTIST + " ASC";
     }// end switch
   }// end listOrderByOpts
-  
-	protected boolean openDbAdapter() throws Exception {
-	  boolean isOpen = false;
-	  
-		try {
-			if (this.dbAdapterObj == null || !(this.dbAdapterObj.dbIsOpen())) {
-				this.dbAdapterObj = new MyAppDbAdapter(ctxContext);
-				
-				if (this.dbAdapterObj != null) this.sqliteDBObj = this.dbAdapterObj.getReadableDatabase();
-			}// end if (this.dbMusic == null || ...
 
-			if (this.dbAdapterObj.dbIsOpen() && this.sqliteDBObj != null) {
-				isOpen = true;
-			}
-		} catch (Exception error) {
-			MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
-			errExcpError.addToLogFile(error, "MyAppDbSQL.openDbAdapter",
-									  "exception thrown opening the db adapter");
-			errExcpError = null;
+  protected boolean openDbAdapter() throws Exception {
+    boolean isOpen = false;
 
-			isOpen = false;
-		}// end try/catch (Exception error)
-	  
-	  return isOpen;
-	}
-	
-	protected boolean closeDbAdapter() throws Exception {
-		boolean isClosed = false;
+    try {
+      if (this.dbAdapterObj == null || !(this.dbAdapterObj.dbIsOpen())) {
+        this.dbAdapterObj = new MyAppDbAdapter(ctxContext);
 
-		try {
-			// clean up DB objects
-			if (this.sqliteDBObj != null) {
-				this.sqliteDBObj.close();
-				this.sqliteDBObj = null;
-			}
+        if (this.dbAdapterObj != null)
+          this.sqliteDBObj = this.dbAdapterObj.getReadableDatabase();
+      }// end if (this.dbMusic == null || ...
 
-			if (this.dbAdapterObj != null) {
-				this.dbAdapterObj.close();
-				this.dbAdapterObj = null;
-			}
-			
-			isClosed = true;
-		} catch (Exception error) {
-			MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
-			errExcpError.addToLogFile(error, "MyAppDbSQL.closeDbAdapter",
-									  "exception thrown closing the db adapter");
-			errExcpError = null;
+      if (this.dbAdapterObj.dbIsOpen() && this.sqliteDBObj != null) {
+        isOpen = true;
+      }
+    } catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbSQL.openDbAdapter",
+          "exception thrown opening the db adapter");
+      errExcpError = null;
 
-			isClosed = false;
-		}// end try/catch (Exception error)
+      isOpen = false;
+    }// end try/catch (Exception error)
 
-		return isClosed;
-	}
-  
+    return isOpen;
+  }
+
+  protected boolean closeDbAdapter() throws Exception {
+    boolean isClosed = false;
+
+    try {
+      // clean up DB objects
+      if (this.sqliteDBObj != null) {
+        this.sqliteDBObj.close();
+        this.sqliteDBObj = null;
+      }
+
+      if (this.dbAdapterObj != null) {
+        this.dbAdapterObj.close();
+        this.dbAdapterObj = null;
+      }
+
+      isClosed = true;
+    } catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbSQL.closeDbAdapter",
+          "exception thrown closing the db adapter");
+      errExcpError = null;
+
+      isClosed = false;
+    }// end try/catch (Exception error)
+
+    return isClosed;
+  }
+
   /**
    * fetchMusic: Return a Cursor over the list of entries in the database
    * 
@@ -147,32 +148,32 @@ public class MyAppDbSQL {
     Cursor mMusicCursor = null;
 
     try {
-        strOrderBy = listOrderByOpts(intSortOpt);
+      strOrderBy = listOrderByOpts(intSortOpt);
 
-        mMusicCursor = this.sqliteDBObj.query(MyAppDbAdapter.MY_MUSIC_DB_TABLE,
-            new String[] { MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
-                MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
-                MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
-                MyAppDbAdapter.KEY_NOTES }, null, null, null, null, strOrderBy);
+      mMusicCursor = this.sqliteDBObj.query(MyAppDbAdapter.MY_MUSIC_DB_TABLE,
+          new String[] { MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
+              MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
+              MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
+              MyAppDbAdapter.KEY_NOTES }, null, null, null, null, strOrderBy);
 
-        if (mMusicCursor != null) {
-          mMusicCursor.moveToFirst();
+      if (mMusicCursor != null) {
+        mMusicCursor.moveToFirst();
 
-          return mMusicCursor;
+        return mMusicCursor;
       } else {
         return null;
       }// end if (mMusicCursor != null)
     } catch (SQLiteException error) {
       MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
-		errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
+      errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
           "SQLiteException - exception thrown fetching music");
       errExcpError = null;
 
       return null;
     } catch (Exception error) {
       MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(ctxContext);
-		errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
-								  "exception - exception thrown fetching music");
+      errExcpError.addToLogFile(error, "MyAppDbSQL.fetchMusic",
+          "exception - exception thrown fetching music");
       errExcpError = null;
 
       return null;
@@ -193,21 +194,20 @@ public class MyAppDbSQL {
     Cursor mCursor = null;
 
     try {
-        mCursor = this.sqliteDBObj.query(true,
-            MyAppDbAdapter.MY_MUSIC_DB_TABLE, new String[] {
-                MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
-                MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
-                MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
-                MyAppDbAdapter.KEY_NOTES }, MyAppDbAdapter.KEY_ROWID + "="
-                + rowId, null, null, null, null, null);
+      mCursor = this.sqliteDBObj.query(true, MyAppDbAdapter.MY_MUSIC_DB_TABLE,
+          new String[] { MyAppDbAdapter.KEY_ROWID, MyAppDbAdapter.KEY_ALBUM,
+              MyAppDbAdapter.KEY_ALBUMDATE, MyAppDbAdapter.KEY_ARTIST,
+              MyAppDbAdapter.KEY_GENRE, MyAppDbAdapter.KEY_SONG_TITLE,
+              MyAppDbAdapter.KEY_NOTES }, MyAppDbAdapter.KEY_ROWID + "="
+              + rowId, null, null, null, null, null);
 
-        if (mCursor != null) {
-          mCursor.moveToFirst();
+      if (mCursor != null) {
+        mCursor.moveToFirst();
 
-          return mCursor;
-        } else {
-          return null;
-        }// end if (mCursor != null)
+        return mCursor;
+      } else {
+        return null;
+      }// end if (mCursor != null)
     } catch (SQLException error) {
       MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
           this.ctxContext);
@@ -227,16 +227,16 @@ public class MyAppDbSQL {
       return null;
     }// end try/catch (Exception error)
   }// end fetchListEntry(long rowId)
-  
+
   /**
    * exportTableQuery: Return a Cursor for a specific table in the database
    * 
    * @param strTableName
    *          the specified table
-   *          
+   * 
    * @param strOrderBy
    *          the selected ordering option
-   *          
+   * 
    * @return Cursor containing filtered query results
    * @throws SQLException
    *           if entry could not be found/retrieved
@@ -245,19 +245,19 @@ public class MyAppDbSQL {
     Cursor mMusicCursor = null;
 
     try {
-        // get everything from the table
-        String strSQL = "SELECT * FROM " + strTableName + " ORDER BY "
-            + strOrderBy;
+      // get everything from the table
+      String strSQL = "SELECT * FROM " + strTableName + " ORDER BY "
+          + strOrderBy;
 
-        mMusicCursor = this.sqliteDBObj.rawQuery(strSQL, null);
+      mMusicCursor = this.sqliteDBObj.rawQuery(strSQL, null);
 
-        if (mMusicCursor != null) {
-          mMusicCursor.moveToFirst();
+      if (mMusicCursor != null) {
+        mMusicCursor.moveToFirst();
 
-          return mMusicCursor;
-        } else {
-          return null;
-        }// end if (mMusicCursor != null
+        return mMusicCursor;
+      } else {
+        return null;
+      }// end if (mMusicCursor != null
     } catch (SQLException error) {
       MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
           this.ctxContext);
@@ -289,43 +289,43 @@ public class MyAppDbSQL {
       String txtartist, String txtgenre, String txtsongname, String txtnotes) {
     boolean blIsSuccessful = false;
 
-      this.sqliteDBObj.beginTransaction();
-      try {
-        ContentValues initialValues = new ContentValues();
+    this.sqliteDBObj.beginTransaction();
+    try {
+      ContentValues initialValues = new ContentValues();
 
-        initialValues.put(MyAppDbAdapter.KEY_ALBUM, txtAlbum);
-        initialValues.put(MyAppDbAdapter.KEY_ALBUMDATE, albumdate);
-        initialValues.put(MyAppDbAdapter.KEY_ARTIST, txtartist);
-        initialValues.put(MyAppDbAdapter.KEY_GENRE, txtgenre);
-        // initialValues.put(KEY_SONG_TITLE, txtsongname);
-        initialValues.put(MyAppDbAdapter.KEY_NOTES, txtnotes);
+      initialValues.put(MyAppDbAdapter.KEY_ALBUM, txtAlbum);
+      initialValues.put(MyAppDbAdapter.KEY_ALBUMDATE, albumdate);
+      initialValues.put(MyAppDbAdapter.KEY_ARTIST, txtartist);
+      initialValues.put(MyAppDbAdapter.KEY_GENRE, txtgenre);
+      // initialValues.put(KEY_SONG_TITLE, txtsongname);
+      initialValues.put(MyAppDbAdapter.KEY_NOTES, txtnotes);
 
-        blIsSuccessful = (this.sqliteDBObj.insert(
-            MyAppDbAdapter.MY_MUSIC_DB_TABLE, null, initialValues) != -1);
+      blIsSuccessful = (this.sqliteDBObj.insert(
+          MyAppDbAdapter.MY_MUSIC_DB_TABLE, null, initialValues) != -1);
 
-        if (blIsSuccessful == true) {
-          this.sqliteDBObj.setTransactionSuccessful();
-        }
-      }// end try
-      catch (SQLException error) {
-        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
-            "creating music entry");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      catch (Exception error) {
-        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
-            "creating music entry");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      finally {
-        this.sqliteDBObj.endTransaction();
+      if (blIsSuccessful == true) {
+        this.sqliteDBObj.setTransactionSuccessful();
       }
+    }// end try
+    catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
+          "creating music entry");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.createMusicEntry",
+          "creating music entry");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    finally {
+      this.sqliteDBObj.endTransaction();
+    }
 
     return blIsSuccessful;
   }// end createMusicEntry
@@ -343,43 +343,43 @@ public class MyAppDbSQL {
       String strOrigPubDate, String strOrigArtist, String strOrigGenre) {
     boolean blIsSuccessful = false;
 
-      this.sqliteDBObj.beginTransaction();
-      try {
-        ContentValues args = new ContentValues();
+    this.sqliteDBObj.beginTransaction();
+    try {
+      ContentValues args = new ContentValues();
 
-        args.put(MyAppDbAdapter.KEY_ALBUM, strAlbum);
-        args.put(MyAppDbAdapter.KEY_ALBUMDATE, strPubDate);
-        args.put(MyAppDbAdapter.KEY_ARTIST, strArtist);
-        args.put(MyAppDbAdapter.KEY_GENRE, strGenre);
-        args.put(MyAppDbAdapter.KEY_NOTES, strNotes);
+      args.put(MyAppDbAdapter.KEY_ALBUM, strAlbum);
+      args.put(MyAppDbAdapter.KEY_ALBUMDATE, strPubDate);
+      args.put(MyAppDbAdapter.KEY_ARTIST, strArtist);
+      args.put(MyAppDbAdapter.KEY_GENRE, strGenre);
+      args.put(MyAppDbAdapter.KEY_NOTES, strNotes);
 
-        blIsSuccessful = (this.sqliteDBObj.update(
-            MyAppDbAdapter.MY_MUSIC_DB_TABLE, args, MyAppDbAdapter.KEY_ROWID
-                + "=" + rowId, null) != -1);
+      blIsSuccessful = (this.sqliteDBObj.update(
+          MyAppDbAdapter.MY_MUSIC_DB_TABLE, args, MyAppDbAdapter.KEY_ROWID
+              + "=" + rowId, null) != -1);
 
-        if (blIsSuccessful == true) {
-          this.sqliteDBObj.setTransactionSuccessful();
-        }
-      }// end try
-      catch (SQLException error) {
-        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
-            "updating music entry information");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      catch (Exception error) {
-        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
-            "updating music entry information");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      finally {
-        this.sqliteDBObj.endTransaction();
+      if (blIsSuccessful == true) {
+        this.sqliteDBObj.setTransactionSuccessful();
       }
+    }// end try
+    catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
+          "updating music entry information");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.updateMusicEntry",
+          "updating music entry information");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    finally {
+      this.sqliteDBObj.endTransaction();
+    }
 
     return blIsSuccessful;
   }// end updateMusicEntry
@@ -397,33 +397,33 @@ public class MyAppDbSQL {
     // delete entries
     boolean blIsSuccessful = false;
 
-      this.sqliteDBObj.beginTransaction();
-      try {
-        blIsSuccessful = this.sqliteDBObj.delete(
-            MyAppDbAdapter.MY_MUSIC_DB_TABLE, "1", null) > 0;
-        if (blIsSuccessful == true) {
-          this.sqliteDBObj.setTransactionSuccessful();
-        }
-      }// end try
-      catch (SQLException error) {
-        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
-            "deleting music entries");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      catch (Exception error) {
-        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
-            "deleting music entries");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      finally {
-        this.sqliteDBObj.endTransaction();
+    this.sqliteDBObj.beginTransaction();
+    try {
+      blIsSuccessful = this.sqliteDBObj.delete(
+          MyAppDbAdapter.MY_MUSIC_DB_TABLE, "1", null) > 0;
+      if (blIsSuccessful == true) {
+        this.sqliteDBObj.setTransactionSuccessful();
       }
+    }// end try
+    catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
+          "deleting music entries");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntries",
+          "deleting music entries");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    finally {
+      this.sqliteDBObj.endTransaction();
+    }
 
     return blIsSuccessful;
   }// end deleteMusicEntries(String strAcctName)
@@ -443,48 +443,48 @@ public class MyAppDbSQL {
     // delete a single music entry in the music table
     boolean blIsSuccessful = false;
 
-      this.sqliteDBObj.beginTransaction();
-      try {
-        Cursor crsrListRowData;
+    this.sqliteDBObj.beginTransaction();
+    try {
+      Cursor crsrListRowData;
 
-        crsrListRowData = fetchListEntry(rowId);
+      crsrListRowData = fetchListEntry(rowId);
 
-        if (crsrListRowData.getCount() >= 0) {
-          blIsSuccessful = this.sqliteDBObj.delete(
-              MyAppDbAdapter.MY_MUSIC_DB_TABLE, MyAppDbAdapter.KEY_ROWID + "="
-                  + rowId, null) > 0;
-        } else {
-          blIsSuccessful = true;
-        }
-
-        crsrListRowData.close();
-        crsrListRowData = null;
-
-        if (blIsSuccessful == true) {
-          this.sqliteDBObj.setTransactionSuccessful();
-        }
-      }// end try
-      catch (SQLException error) {
-        MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
-            "deleting music entry");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      catch (Exception error) {
-        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-            this.ctxContext);
-        errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
-            "deleting music entry");
-        errExcpError = null;
-        blIsSuccessful = false;
-      }// end try/catch (Exception error)
-      finally {
-        this.sqliteDBObj.endTransaction();
+      if (crsrListRowData.getCount() >= 0) {
+        blIsSuccessful = this.sqliteDBObj.delete(
+            MyAppDbAdapter.MY_MUSIC_DB_TABLE, MyAppDbAdapter.KEY_ROWID + "="
+                + rowId, null) > 0;
+      } else {
+        blIsSuccessful = true;
       }
+
+      crsrListRowData.close();
+      crsrListRowData = null;
+
+      if (blIsSuccessful == true) {
+        this.sqliteDBObj.setTransactionSuccessful();
+      }
+    }// end try
+    catch (SQLException error) {
+      MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
+          "deleting music entry");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    catch (Exception error) {
+      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
+          this.ctxContext);
+      errExcpError.addToLogFile(error, "MyAppDbAdapter.deleteMusicEntry",
+          "deleting music entry");
+      errExcpError = null;
+      blIsSuccessful = false;
+    }// end try/catch (Exception error)
+    finally {
+      this.sqliteDBObj.endTransaction();
+    }
 
     return blIsSuccessful;
   }// end deleteMusicEntry(long rowId)
-}//end MyAppDbSQL class
+}// end MyAppDbSQL class
 }}}
