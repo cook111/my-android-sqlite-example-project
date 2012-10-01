@@ -64,7 +64,7 @@ public class MyDisplayAlertClass extends AlertDialog.Builder{
         } catch (Exception error) {
           MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
               ctxContext);
-          errExcpError.addToLogFile(error, "MyDisplayAlertClass.DialogInterface", "no alert");
+          errExcpError.addToLogFile(error, "MyDisplayAlertClass.DialogInterface", "no prompt");
           errExcpError = null;
         }// end try/catch (Exception error)
       }// end onClick
@@ -143,7 +143,7 @@ public class MyDisplayAlertClass extends AlertDialog.Builder{
     catch (Exception error) {
       MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
           ctxContext);
-      errExcpError.addToLogFile(error, "MyDisplayAlertClass.setAlertMsg", "no alert");
+      errExcpError.addToLogFile(error, "MyDisplayAlertClass.setAlertMsg", "no prompt");
       errExcpError = null;
       return null;
     }// end try/catch (Exception error)
