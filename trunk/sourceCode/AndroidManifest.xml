@@ -6,12 +6,12 @@
     android:versionName="1.02" >
 
     <!-- Permissions -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
     <!-- SDK version -->
     <uses-sdk android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="10" />
 
     <supports-screens
         android:anyDensity="true"
