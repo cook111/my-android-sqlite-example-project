@@ -116,8 +116,6 @@ public class DBTableExport {
             
             if (myExportFileWriter != null) {
               blFileCreated = true;
-            } else {
-              blFileCreated = false;
             }// end if (myExportFileWriter != null)
           }// end if (blFileCreated == true)
         }// end if (blNoSDCard == false)
@@ -129,8 +127,6 @@ public class DBTableExport {
 
           if (myExportFileWriter != null) {
             blFileCreated = true;
-          } else {
-            blFileCreated = false;
           }// end if (myExportFileWriter != null)
         }// end if/else (blNoSDCard == false)
       }// end try
