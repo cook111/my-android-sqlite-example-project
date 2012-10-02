@@ -541,7 +541,7 @@ public class AddEditMusic extends Activity {
       APPGlobalVars.SCR_PAUSE_CTL = "";
 
       
-      finish();
+      if (!isFinishing()) finish();
     } else {
       APPGlobalVars.SCR_PAUSE_CTL = "";
     }
