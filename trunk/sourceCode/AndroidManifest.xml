@@ -2,13 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="preferExternal"
     package="com.my_company.app_template"
-    android:versionCode="3"
-    android:versionName="1.01" >
+    android:versionCode="4"
+    android:versionName="1.02" >
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    
+    <!-- SDK version -->
+    <uses-sdk android:minSdkVersion="8"
+        android:targetSdkVersion="8" />
 
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+    
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
@@ -50,14 +60,5 @@
             android:name=".EditAppPreferences" >
         </activity>
     </application>
-
-    <!-- SDK version -->
-    <uses-sdk android:minSdkVersion="8" />
-
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true" />
 
 </manifest>

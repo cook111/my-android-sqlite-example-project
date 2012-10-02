@@ -140,8 +140,6 @@ public class MyErrorLog<T> {
 
             if (myErrorFileOutStreamWriter != null) {
               blFileCreated = true;
-            } else {
-              blFileCreated = false;
             }// end if (myErrorFileOutStreamWriter != null)
           }// end if (blFileCreated == true)
         } else {
@@ -153,8 +151,6 @@ public class MyErrorLog<T> {
 
           if (myErrorFileOutStreamWriter != null) {
             blFileCreated = true;
-          } else {
-            blFileCreated = false;
           }// end if (myErrorFileOutStreamWriter != null)
         }// end if (blNoSDCard == false)
       }// end try
