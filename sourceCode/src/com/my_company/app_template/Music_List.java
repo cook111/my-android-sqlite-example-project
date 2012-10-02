@@ -896,7 +896,7 @@ public class Music_List extends ListActivity {
 
       APPGlobalVars.SCR_PAUSE_CTL = "";
 
-      finish();
+      if (!isFinishing()) finish();
     }
     super.onPause();
   }// end onPause
