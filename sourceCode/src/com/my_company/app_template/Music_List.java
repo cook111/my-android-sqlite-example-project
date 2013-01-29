@@ -891,6 +891,8 @@ public class Music_List extends ListActivity {
     // The user is going somewhere else, so make sure their current
     // changes are safely saved away in the provider. We don't need
     // to do this if only editing.
+    super.onPause();
+    
     if (APPGlobalVars.SCR_PAUSE_CTL != null
         && APPGlobalVars.SCR_PAUSE_CTL.equals("QUIT")) {
 
@@ -898,7 +900,9 @@ public class Music_List extends ListActivity {
 
       if (this.isFinishing() == false) finish();
     }
-    super.onPause();
+    
+    //this stops management of the listview cursor to resolve the 'Invalid statement in fillWindow()' error
+    this.stopManagingCursor(this.mEntryCursor);
   }// end onPause
 
   /**

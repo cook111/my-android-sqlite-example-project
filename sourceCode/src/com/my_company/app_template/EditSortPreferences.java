@@ -202,6 +202,8 @@ public class EditSortPreferences extends PreferenceActivity {
     // The user is going somewhere else, so make sure their current
     // changes are safely saved away in the provider. We don't need
     // to do this if only editing.
+    super.onPause();
+    
     try {
       if (APPGlobalVars.SCR_PAUSE_CTL != null
           && APPGlobalVars.SCR_PAUSE_CTL.equals("QUIT")) {
@@ -217,7 +219,6 @@ public class EditSortPreferences extends PreferenceActivity {
       errExcpError.addToLogFile(error, "EditSortPreferences.onPause", " ");
       errExcpError = null;
     }// end try/catch (Exception error)
-    super.onPause();
   }// end onPause
 
   /**
