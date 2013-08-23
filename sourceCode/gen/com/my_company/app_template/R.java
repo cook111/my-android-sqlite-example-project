@@ -105,89 +105,67 @@ public final class R {
         public static final int sort_menu_icon=0x7f020025;
     }
     public static final class id {
-        public static final int ImageView01=0x7f09002c;
+        public static final int ImageView01=0x7f09001f;
         public static final int LinearLayout01=0x7f090012;
-        public static final int app_settings=0x7f090032;
-        public static final int appname=0x7f090017;
-        public static final int appversion=0x7f090018;
-        public static final int back_menu_option=0x7f090034;
+        public static final int app_settings=0x7f090021;
+        public static final int back_menu_option=0x7f09002c;
         public static final int btnCancel=0x7f090011;
         public static final int btnOkSubmit=0x7f090014;
         public static final int btnPickDate=0x7f090008;
-        public static final int btnPwCancel=0x7f09002f;
-        public static final int btnPwRemind=0x7f090030;
-        public static final int btnPwRemindCancel=0x7f090021;
-        public static final int btnPwRemindSubmit=0x7f090020;
-        public static final int btnPwSubmit=0x7f09002e;
         public static final int btnSave=0x7f09000f;
         public static final int btnSaveNew=0x7f090010;
-        public static final int cancel_menu=0x7f090039;
-        public static final int clear_screen_menu_option=0x7f09003d;
-        public static final int delete_entry_context_menu_option=0x7f090035;
-        public static final int export_music_list=0x7f09003c;
-        public static final int info_menu_option=0x7f090036;
+        public static final int cancel_menu=0x7f090027;
+        public static final int clear_screen_menu_option=0x7f09002b;
+        public static final int delete_entry_context_menu_option=0x7f090023;
+        public static final int export_music_list=0x7f09002a;
+        public static final int info_menu_option=0x7f090024;
         public static final int lblArtist=0x7f090003;
         public static final int lblDate=0x7f090007;
         public static final int lblGenre=0x7f09000a;
-        public static final int lpsortopt=0x7f090031;
+        public static final int lpsortopt=0x7f090020;
         public static final int myScrollView=0x7f090001;
         public static final int myWidget248=0x7f09000e;
         public static final int myWidget48=0x7f090000;
-        public static final int my_list_label=0x7f09002b;
-        public static final int mydivider=0x7f090028;
-        public static final int mydivider2=0x7f090029;
-        public static final int mydivider3=0x7f09002a;
-        public static final int new_entry_menu_option=0x7f09003a;
-        public static final int password_checkbox=0x7f090016;
-        public static final int quit=0x7f090033;
-        public static final int reconciled_checkbox=0x7f090015;
-        public static final int rowGenre=0x7f090026;
-        public static final int rowalbum=0x7f090022;
-        public static final int save_menu=0x7f090037;
-        public static final int savenew_menu=0x7f090038;
-        public static final int sorting_options=0x7f09003b;
+        public static final int my_list_label=0x7f09001e;
+        public static final int mydivider=0x7f09001b;
+        public static final int mydivider2=0x7f09001c;
+        public static final int mydivider3=0x7f09001d;
+        public static final int new_entry_menu_option=0x7f090028;
+        public static final int quit=0x7f090022;
+        public static final int rowGenre=0x7f090019;
+        public static final int rowalbum=0x7f090015;
+        public static final int save_menu=0x7f090025;
+        public static final int savenew_menu=0x7f090026;
+        public static final int sorting_options=0x7f090029;
         public static final int txtAlbum=0x7f090006;
         public static final int txtArtist=0x7f090004;
         public static final int txtGenre=0x7f09000b;
         public static final int txtMsgTxt=0x7f090013;
         public static final int txtNotes=0x7f09000d;
-        public static final int txtPwAnswer=0x7f09001e;
-        public static final int txtPwEntry=0x7f09002d;
-        public static final int txtPwQLabel=0x7f09001c;
-        public static final int txtPwQuestion=0x7f09001d;
-        public static final int txtPwRemindEmail=0x7f09001f;
-        public static final int txtalbum=0x7f090025;
+        public static final int txtalbum=0x7f090018;
         public static final int txtalbumdate=0x7f090009;
-        public static final int txtartist=0x7f090023;
-        public static final int txtdatainfo=0x7f09001b;
-        public static final int txtdateDescrDivider=0x7f090024;
-        public static final int txtgenre=0x7f090027;
+        public static final int txtartist=0x7f090016;
+        public static final int txtdateDescrDivider=0x7f090017;
+        public static final int txtgenre=0x7f09001a;
         public static final int widget148=0x7f090005;
         public static final int widget37=0x7f090002;
         public static final int widget53=0x7f09000c;
-        public static final int widget54=0x7f090019;
-        public static final int widget55=0x7f09001a;
     }
     public static final class layout {
         public static final int add_edit_music=0x7f030000;
         public static final int alertmsg=0x7f030001;
-        public static final int appsettings_layout=0x7f030002;
-        public static final int infoview=0x7f030003;
-        public static final int logininfo_reminder=0x7f030004;
-        public static final int musicentryrow=0x7f030005;
-        public static final int musiclist=0x7f030006;
-        public static final int my_splash_screen=0x7f030007;
-        public static final int securelogin=0x7f030008;
+        public static final int musicentryrow=0x7f030002;
+        public static final int musiclist=0x7f030003;
+        public static final int my_splash_screen=0x7f030004;
     }
     public static final class menu {
         public static final int app_template_menu=0x7f080000;
-        public static final int info_menu=0x7f080001;
-        public static final int listview_context_menu=0x7f080002;
-        public static final int main_app_menu=0x7f080003;
-        public static final int music_entry_menu=0x7f080004;
-        public static final int music_list_menu=0x7f080005;
-        public static final int preference_menu=0x7f080006;
-        public static final int standard_context_menu=0x7f080007;
+        public static final int listview_context_menu=0x7f080001;
+        public static final int main_app_menu=0x7f080002;
+        public static final int music_entry_menu=0x7f080003;
+        public static final int music_list_menu=0x7f080004;
+        public static final int preference_menu=0x7f080005;
+        public static final int standard_context_menu=0x7f080006;
     }
     public static final class string {
         public static final int DATE_FORMATTING_TIME_VALUE=0x7f070038;
@@ -198,11 +176,12 @@ public final class R {
          */
         public static final int DATE_FORMAT_ISO8601=0x7f070035;
         public static final int DATE_FORMAT_LOG_ENTRY=0x7f070037;
+        public static final int DATE_FORMAT_TableExport=0x7f070039;
         /**  ============================== 
   Preference strings            
  ============================== 
          */
-        public static final int MusicSortOpt=0x7f070045;
+        public static final int MusicSortOpt=0x7f070046;
         /**  ============================== 
   Report Label strings          
  ============================== 
@@ -210,14 +189,14 @@ public final class R {
   Locality strings              
  ============================== 
          */
-        public static final int USD_character=0x7f07004a;
+        public static final int USD_character=0x7f07004b;
         public static final int alert_dialog_cancel=0x7f07002a;
         public static final int alert_dialog_ok=0x7f070029;
         public static final int alphabet=0x7f070017;
         public static final int app_demo_name=0x7f070001;
         public static final int app_name=0x7f070000;
-        public static final int app_prefs_filename=0x7f070046;
-        public static final int app_settings=0x7f070048;
+        public static final int app_prefs_filename=0x7f070047;
+        public static final int app_settings=0x7f070049;
         public static final int backupYesNo_message=0x7f07002d;
         public static final int clearYesNo_message=0x7f070028;
         /**  ============================== 
@@ -232,10 +211,10 @@ public final class R {
  Info View Labels               
  ============================== 
          */
-        public static final int company_name=0x7f070040;
-        public static final int copyright=0x7f070041;
+        public static final int company_name=0x7f070041;
+        public static final int copyright=0x7f070042;
         public static final int date_label=0x7f07000c;
-        public static final int date_range_search=0x7f07003c;
+        public static final int date_range_search=0x7f07003d;
         /**  ============================== 
   Context View strings          
  ============================== 
@@ -243,7 +222,7 @@ public final class R {
   Hint strings                  
  ============================== 
          */
-        public static final int date_search=0x7f07003b;
+        public static final int date_search=0x7f07003c;
         public static final int db_bkup_descr=0x7f07002f;
         public static final int db_bkup_label=0x7f070031;
         public static final int db_folder=0x7f07002c;
@@ -267,27 +246,27 @@ public final class R {
  ============================== 
          */
         public static final int deleteEntryYesNo_title=0x7f070025;
-        public static final int deleteMusicYesNo_message=0x7f07003a;
+        public static final int deleteMusicYesNo_message=0x7f07003b;
         /**  ============================== 
   Delete Confirmation strings   
  ============================== 
          */
-        public static final int deleteMusicYesNo_title=0x7f070039;
+        public static final int deleteMusicYesNo_title=0x7f07003a;
         public static final int description_label=0x7f070007;
         public static final int editChkEntry=0x7f070005;
         public static final int empty_list_label=0x7f07000d;
         public static final int entry_view_window=0x7f070003;
-        public static final int eula_accept=0x7f07003e;
-        public static final int eula_refuse=0x7f07003f;
+        public static final int eula_accept=0x7f07003f;
+        public static final int eula_refuse=0x7f070040;
         /**  ============================== 
   EULA strings                  
  ============================== 
          */
-        public static final int eula_title=0x7f07003d;
+        public static final int eula_title=0x7f07003e;
         public static final int filter_equals_label=0x7f07000a;
         public static final int help_label=0x7f070010;
         public static final int info_menu_options=0x7f07001d;
-        public static final int info_note=0x7f070044;
+        public static final int info_note=0x7f070045;
         public static final int list_row_column_separator_label=0x7f07000e;
         public static final int menu_apply_filters=0x7f070024;
         public static final int menu_cancel=0x7f070021;
@@ -314,17 +293,17 @@ public final class R {
         public static final int no_entries=0x7f070004;
         public static final int notes_label=0x7f070008;
         public static final int restoreYesNo_message=0x7f07002e;
-        public static final int rights_reserved=0x7f070042;
+        public static final int rights_reserved=0x7f070043;
         public static final int save=0x7f070014;
         public static final int search_filters_label=0x7f070006;
         public static final int search_label=0x7f070009;
         public static final int set_filters_label=0x7f07000b;
-        public static final int set_preferences=0x7f070049;
+        public static final int set_preferences=0x7f07004a;
         public static final int set_sorting_options_summary=0x7f070013;
-        public static final int sorting_options=0x7f070047;
+        public static final int sorting_options=0x7f070048;
         public static final int sorting_options_title=0x7f070012;
         public static final int submit_label=0x7f070011;
-        public static final int view_app_info_label=0x7f070043;
+        public static final int view_app_info_label=0x7f070044;
     }
     public static final class xml {
         public static final int appprefs=0x7f040000;

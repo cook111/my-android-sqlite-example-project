@@ -3,286 +3,263 @@ package com.my_company.app_template;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.os.Environment;
 import android.util.Log;
 
-public class DBTableExport {
-  private Context ctxLocalContext = null;
-  private static final int DEFAULT_BSTREAM_SIZE = 8000;
+public class DBTableExport
+{
+  private Context _mCtx = null;
+  private static final int _DEFAULT_BSTREAM_SIZE = 8000;
+  private boolean _USE_SDCARD;
+  private Date _currDate;
 
-  protected DBTableExport(Context ctxContext) {
-    this.ctxLocalContext = ctxContext;
+  protected DBTableExport(Context ctxContext)
+	{
+    this._mCtx = ctxContext;
+
+    if (android.os.Environment.MEDIA_MOUNTED.equals(android.os.Environment.getExternalStorageState())
+        && !(Environment.MEDIA_MOUNTED_READ_ONLY.equals(Environment.getExternalStorageState()))
+        )
+		{
+      // going to use the SDCARD
+      this._USE_SDCARD = true;
+    }
+		else
+		{
+      // going to use default data directory
+      this._USE_SDCARD = false;
+    }
   }
 
   protected void exportAsCSVFile(Cursor tblDataCursor, String strTableName)
-      throws IOException {
-    try {
-      String strColNames = "";
-      String strEndOfLine = "\n";
+	{
+		String strColNames = "";
+		String strEndOfLine = "\n";
 
-      File myExportFile = null;
-      FileOutputStream myExportFileOut = null;
-      OutputStreamWriter myExportFileWriter = null;
-      BufferedOutputStream myBuffOutStream = null;
+		File myExportFile = null;
+		FileOutputStream myExportFileOut = null;
+		OutputStreamWriter myExportFileWriter = null;
+		BufferedOutputStream myBuffOutStream = null;
 
-      boolean blFileCreated = false;
-      boolean blFileDeleted = false;
-      boolean blNoSDCard = false;
+		boolean blFileCreated = false;
+		boolean blFileDeleted = false;
 
-      final String EXPORT_FILE_NAME = strTableName + ".csv";
+		final String EXPORT_FILE_NAME = strTableName + ".csv";
 
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-      Date date = new Date();
-      String dateStr = dateFormat.format(date);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+			this._mCtx.getString(R.string.DATE_FORMAT_TableExport));
 
-      final String EXPORT_FILEDIRECTORY = Environment
-          .getExternalStorageDirectory().toString()
-          + "/myMusicList/exports/" + dateStr;
-      String strExportPathToUse = EXPORT_FILEDIRECTORY;
+		try
+		{
+      if (this._USE_SDCARD == true)
+			{
+        //TODO: !!create correct export directory path object
+				// TODO: get project root storage dir from fileUtil class
+				this._currDate = new Date();
+        String dateStr = dateFormat.format(this._currDate);
 
-      // create a file on the sdcard to export the
-      // database contents to
-      if (android.os.Environment.getExternalStorageState().equals(
-          android.os.Environment.MEDIA_MOUNTED)
-          && !(Environment.getExternalStorageState()
-              .equals(Environment.MEDIA_MOUNTED_READ_ONLY))) {
-        try {
-          File myExportLogDirPath = new File(EXPORT_FILEDIRECTORY);
+				//final String EXPORT_FILEDIRECTORY = this._mCtx.getExternalFilesDir(null).getPath() + File.separator 
+				final String EXPORT_FILEDIRECTORY = 
+				  Environment.getExternalStorageDirectory().getPath() 
+					+ File.separator
+						+ "myMusicList" 
+					+ File.separator 
+					+ "exports" 
+					+ File.separator 
+					+ dateStr 
+					+ File.separator;
 
-          if (myExportLogDirPath.mkdirs()) {
-            Log.i("MyErrorLog", "Export directory created at "
-                + EXPORT_FILEDIRECTORY);
-          }// end if (destination.mkdir())
+        File myExportLogDirPath = new File(EXPORT_FILEDIRECTORY);
 
-          if (myExportLogDirPath.exists()) {
-            strExportPathToUse = EXPORT_FILEDIRECTORY + "/";
-            myExportFile = new File(strExportPathToUse + EXPORT_FILE_NAME);
-            myExportLogDirPath = null;
-          } else {
-            strExportPathToUse = Environment.getDataDirectory().toString()
-                + "/";
-            blNoSDCard = true;
-          }// end if (destination.exists())
-        }// end try
-        catch (Exception error) {
-          MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-              this.ctxLocalContext);
-          errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-              "attempting to create an output directory");
-          errExcpError = null;
-          return;
-        }// end try/catch
-      }// end if (android.os.Environment.getExternalStorageState().equals(...
-      else {
-        strExportPathToUse = Environment.getDataDirectory().toString() + "/";
-        blNoSDCard = true;
-      }// end if sd card exists
+        if (myExportLogDirPath.mkdirs())
+				{
+          Log.i("MySDCErrorLog", "Export directory created at "
+								+ EXPORT_FILEDIRECTORY);
+        }// end if (destination.mkdir())
 
-      // create outstream
-      try {
-        if (blNoSDCard == false) {
-          blFileCreated = myExportFile.createNewFile();
+				if (myExportLogDirPath.exists() && myExportLogDirPath.isDirectory())
+				{
+					myExportFile = new File(EXPORT_FILEDIRECTORY + EXPORT_FILE_NAME);
+          myExportLogDirPath = null;
 
-          if (blFileCreated == false) {
-            try {
-              blFileDeleted = myExportFile.delete();
-            }// end try
-            catch (SecurityException error) {
-              MyErrorLog<SecurityException> errExcpError = new MyErrorLog<SecurityException>(
-                  this.ctxLocalContext);
-              errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-                  "deleting export file because it already exists");
-              errExcpError = null;
-              return;
-            }// end try/catch
+					//TODO: Now do filestream, outstream, etc.
+					// use and/or create fileUtil class code AMAP
+        }
+				else
+				{
+					if (myExportLogDirPath != null)
+					{
+						myExportLogDirPath = null;
+					}
 
-            if (blFileDeleted == true) {
-              blFileCreated = myExportFile.createNewFile();
+					return;
+        }// end if (destination.exists())
+
+        // create outstream
+        blFileCreated = myExportFile.createNewFile();
+
+        if (blFileCreated == false)
+				{
+          blFileDeleted = myExportFile.delete();
+
+          if (blFileDeleted == true)
+					{
+            blFileCreated = myExportFile.createNewFile();
+          }
+        }// end if (blFileCreated == false)
+
+        if (blFileCreated == true)
+				{
+          myExportFileOut = 
+						new FileOutputStream(myExportFile);
+          myBuffOutStream = 
+						new BufferedOutputStream(myExportFileOut,
+																		 _DEFAULT_BSTREAM_SIZE);
+          myExportFileWriter = 
+						new OutputStreamWriter(myBuffOutStream);
+        }// end if (blFileCreated == true)
+      }
+			else
+			{
+        // this._USE_SDCARD == false
+        myExportFileOut = 
+					this._mCtx.openFileOutput(EXPORT_FILE_NAME, 
+																		Context.MODE_PRIVATE);
+        myBuffOutStream = 
+					new BufferedOutputStream(myExportFileOut,
+																	 _DEFAULT_BSTREAM_SIZE);
+        myExportFileWriter = 
+					new OutputStreamWriter(myBuffOutStream);
+
+        blFileCreated = true;
+      }//end if/else (this._USE_SDCARD == true)
+
+      if (blFileCreated == true)
+			{
+        if (tblDataCursor != null)
+				{
+          tblDataCursor.moveToFirst();
+
+          int numCols = tblDataCursor.getColumnCount();
+
+          // store column names
+          for (int idx = 0; idx < numCols; idx++)
+					{
+            String strSingleColName = tblDataCursor.getColumnName(idx);
+            if(strSingleColName != null
+			   && !strSingleColName.equals("")
+			   && !strSingleColName.equals(" ")
+			   && strSingleColName.equals("_id"))
+						{
+              strSingleColName = "row_id";
             }
-          }// end if (blFileCreated == false)
 
-          if (blFileCreated == true) {
-            myExportFileOut = new FileOutputStream(myExportFile);
-            myBuffOutStream = new BufferedOutputStream(myExportFileOut, DEFAULT_BSTREAM_SIZE);
-            myExportFileWriter = new OutputStreamWriter(myBuffOutStream);
-            
-            if (myExportFileWriter != null) {
-              blFileCreated = true;
-            }// end if (myExportFileWriter != null)
-          }// end if (blFileCreated == true)
-        }// end if (blNoSDCard == false)
-        else {
-          myExportFileOut = this.ctxLocalContext.openFileOutput(
-              EXPORT_FILE_NAME, Context.MODE_PRIVATE);
-          myBuffOutStream = new BufferedOutputStream(myExportFileOut, DEFAULT_BSTREAM_SIZE);
-          myExportFileWriter = new OutputStreamWriter(myBuffOutStream);
+            strColNames = strColNames + strSingleColName;
 
-          if (myExportFileWriter != null) {
-            blFileCreated = true;
-          }// end if (myExportFileWriter != null)
-        }// end if/else (blNoSDCard == false)
-      }// end try
-      catch (FileNotFoundException error) {
-        MyErrorLog<FileNotFoundException> errExcpError = new MyErrorLog<FileNotFoundException>(
-            this.ctxLocalContext);
-        errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-            "creating BufferedWriter, file was not found");
-        errExcpError = null;
-        return;
-      } catch (IOException error) {
-        MyErrorLog<IOException> errExcpError = new MyErrorLog<IOException>(
-            this.ctxLocalContext);
-        errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-            "creating BufferedWriter, I/O error");
-        errExcpError = null;
-        return;
-      } catch (Exception error) {
-        MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-            this.ctxLocalContext);
-        errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-            "creating BufferedWriter");
-        errExcpError = null;
-        return;
-      }// end try/catch
+            strColNames = strColNames + ",";
 
-      if (blFileCreated == true) {
-        try {
-          if (tblDataCursor != null) {
-            tblDataCursor.moveToFirst();
+            strSingleColName = null;
+          }// end for loop
 
-            int numCols = tblDataCursor.getColumnCount();
+          // write to file and then add end of line char
+          myExportFileWriter.write(strColNames);
+          myExportFileWriter.write(strEndOfLine);
+
+          // move through the table, creating rows
+          // and adding each column with name and value
+          // to the row
+          while (tblDataCursor.getPosition() < tblDataCursor.getCount())
+					{
+            String strRowValues = "";
 
             // store column names
-            for (int idx = 0; idx < numCols; idx++) {
-              String strSingleColName = tblDataCursor.getColumnName(idx);
-              if (strSingleColName != null && !strSingleColName.equals("")
-                  && !strSingleColName.equals(" ")
-                  && strSingleColName.equals("reconciled")) {
-                strSingleColName = strSingleColName + "(0=false/1=true)";
-              } else if (strSingleColName != null
-                  && !strSingleColName.equals("")
-                  && !strSingleColName.equals(" ")
-                  && strSingleColName.equals("_id")) {
-                strSingleColName = "row_id";
-              }
+            for (int idx = 0; idx < numCols; idx++)
+						{
+              strRowValues = strRowValues + tblDataCursor.getString(idx);
 
-              strColNames = strColNames + strSingleColName;
-
-              strColNames = strColNames + ",";
-
-              strSingleColName = null;
-            }// end for loop
+              strRowValues = strRowValues + ",";
+            }// end for
 
             // write to file and then add end of line char
-            myExportFileWriter.write(strColNames);
+            myExportFileWriter.write(strRowValues);
             myExportFileWriter.write(strEndOfLine);
 
-            // move through the table, creating rows
-            // and adding each column with name and value
-            // to the row
-            while (tblDataCursor.getPosition() < tblDataCursor.getCount()) {
-              String strRowValues = "";
+            tblDataCursor.moveToNext();
+          }// end while
+        }// end if (tblDataCursor != null)
 
-              // store column names
-              for (int idx = 0; idx < numCols; idx++) {
-                strRowValues = strRowValues + tblDataCursor.getString(idx);
-
-                strRowValues = strRowValues + ",";
-              }// end for
-
-              // write to file and then add end of line char
-              myExportFileWriter.write(strRowValues);
-              myExportFileWriter.write(strEndOfLine);
-
-              tblDataCursor.moveToNext();
-            }// end while
-          }// end if (tblDataCursor != null)
-
-          tblDataCursor.close();
-        }// end try
-        catch (FileNotFoundException error) {
-          MyErrorLog<FileNotFoundException> errExcpError = new MyErrorLog<FileNotFoundException>(
-              this.ctxLocalContext);
-          errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-              "ouput file was not found");
-          errExcpError = null;
-          return;
-        } catch (IOException error) {
-          MyErrorLog<IOException> errExcpError = new MyErrorLog<IOException>(
-              this.ctxLocalContext);
-          errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-              "error writing to the output file");
-          errExcpError = null;
-          return;
-        } catch (SQLException error) {
-          MyErrorLog<SQLException> errExcpError = new MyErrorLog<SQLException>(
-              this.ctxLocalContext);
-          errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-              "sql error with the export cursor");
-          errExcpError = null;
-          return;
-        } catch (Exception error) {
-          MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-              this.ctxLocalContext);
-          errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-              "creating cursor and exporting data");
-          errExcpError = null;
-          return;
-        }// end try/catch
+        tblDataCursor.close();
       }// end if (blFileCreated == true)
 
       // perform object cleanup
-      if (myExportFileWriter != null) {
+      if (myExportFileWriter != null)
+			{
         myExportFileWriter.flush();
         myExportFileWriter.close();
         myExportFileWriter = null;
       }
-      if (myBuffOutStream != null) {
+      if (myBuffOutStream != null)
+			{
         myBuffOutStream.close();
         myBuffOutStream = null;
       }
-      if (myExportFileOut != null) {
+      if (myExportFileOut != null)
+			{
         myExportFileOut.close();
         myExportFileOut = null;
       }
-      if (dateFormat != null) {
+      if (dateFormat != null)
+			{
         dateFormat = null;
       }
-      if (date != null) {
-        date = null;
+      if (this._currDate != null)
+			{
+        this._currDate = null;
       }
-      if (myExportFile != null) {
+      if (myExportFile != null)
+			{
         myExportFile = null;
       }
       // end of object cleanup
 
     }// end try
-    catch (FileNotFoundException error) {
-      MyErrorLog<FileNotFoundException> errExcpError = new MyErrorLog<FileNotFoundException>(
-          this.ctxLocalContext);
-      errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-          "ouput file was not found");
-      errExcpError = null;
-    } catch (IOException error) {
-      MyErrorLog<IOException> errExcpError = new MyErrorLog<IOException>(
-          this.ctxLocalContext);
-      errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-          "error writing to the output file");
-      errExcpError = null;
-    } catch (Exception error) {
-      MyErrorLog<Exception> errExcpError = new MyErrorLog<Exception>(
-          this.ctxLocalContext);
-      errExcpError.addToLogFile(error, "DBTableExport.exportAsCSVFile",
-          "main try/catch, exception error thrown");
-      errExcpError = null;
+    catch (FileNotFoundException errException)
+		{
+      Log.i("MyErrorLog.addToLogFile",
+						" While trying to write the export data, the following exception occurred: "
+						+ errException.toString());
+      errException = null;
+      return;
+    }
+		catch (IOException errException)
+		{
+      Log.i("MyErrorLog.addToLogFile",
+						" While trying to write the export data, the following exception occurred: "
+						+ errException.toString());
+      errException = null;
+      return;
+    }
+		catch (IllegalArgumentException errException)
+		{
+      Log.i("MyErrorLog.addToLogFile",
+						" While trying to write the export data, the following exception occurred: "
+						+ errException.toString());
+      errException = null;
+      return;
+    }
+    catch (Exception errException)
+		{
+      Log.i("MyErrorLog.addToLogFile",
+						" While trying to write the export data, the following exception occurred: "
+						+ errException.toString());
+      errException = null;
     }// end try/catch code
 
     return;
