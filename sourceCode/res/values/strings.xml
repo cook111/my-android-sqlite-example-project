@@ -87,6 +87,7 @@
     <string name="DATE_FORMAT_LOG_ENTRY">MM/dd/yyyy HH:mm:ss</string>
     <string name="DATE_FORMATTING_TIME_VALUE">00:00:00</string>
     <string name="DATE_FORMAT_TableExport">yyyyMMdd</string>
+    <string name="YEAR_FIRST_DATE_FORMAT">yyyy-MM-dd</string>
     
     <!-- ============================== -->
     <!--  Delete Confirmation strings   -->

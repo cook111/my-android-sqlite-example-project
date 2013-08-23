@@ -181,7 +181,7 @@ public final class R {
   Preference strings            
  ============================== 
          */
-        public static final int MusicSortOpt=0x7f070046;
+        public static final int MusicSortOpt=0x7f070047;
         /**  ============================== 
   Report Label strings          
  ============================== 
@@ -189,14 +189,15 @@ public final class R {
   Locality strings              
  ============================== 
          */
-        public static final int USD_character=0x7f07004b;
+        public static final int USD_character=0x7f07004c;
+        public static final int YEAR_FIRST_DATE_FORMAT=0x7f07003a;
         public static final int alert_dialog_cancel=0x7f07002a;
         public static final int alert_dialog_ok=0x7f070029;
         public static final int alphabet=0x7f070017;
         public static final int app_demo_name=0x7f070001;
         public static final int app_name=0x7f070000;
-        public static final int app_prefs_filename=0x7f070047;
-        public static final int app_settings=0x7f070049;
+        public static final int app_prefs_filename=0x7f070048;
+        public static final int app_settings=0x7f07004a;
         public static final int backupYesNo_message=0x7f07002d;
         public static final int clearYesNo_message=0x7f070028;
         /**  ============================== 
@@ -211,10 +212,10 @@ public final class R {
  Info View Labels               
  ============================== 
          */
-        public static final int company_name=0x7f070041;
-        public static final int copyright=0x7f070042;
+        public static final int company_name=0x7f070042;
+        public static final int copyright=0x7f070043;
         public static final int date_label=0x7f07000c;
-        public static final int date_range_search=0x7f07003d;
+        public static final int date_range_search=0x7f07003e;
         /**  ============================== 
   Context View strings          
  ============================== 
@@ -222,7 +223,7 @@ public final class R {
   Hint strings                  
  ============================== 
          */
-        public static final int date_search=0x7f07003c;
+        public static final int date_search=0x7f07003d;
         public static final int db_bkup_descr=0x7f07002f;
         public static final int db_bkup_label=0x7f070031;
         public static final int db_folder=0x7f07002c;
@@ -246,27 +247,27 @@ public final class R {
  ============================== 
          */
         public static final int deleteEntryYesNo_title=0x7f070025;
-        public static final int deleteMusicYesNo_message=0x7f07003b;
+        public static final int deleteMusicYesNo_message=0x7f07003c;
         /**  ============================== 
   Delete Confirmation strings   
  ============================== 
          */
-        public static final int deleteMusicYesNo_title=0x7f07003a;
+        public static final int deleteMusicYesNo_title=0x7f07003b;
         public static final int description_label=0x7f070007;
         public static final int editChkEntry=0x7f070005;
         public static final int empty_list_label=0x7f07000d;
         public static final int entry_view_window=0x7f070003;
-        public static final int eula_accept=0x7f07003f;
-        public static final int eula_refuse=0x7f070040;
+        public static final int eula_accept=0x7f070040;
+        public static final int eula_refuse=0x7f070041;
         /**  ============================== 
   EULA strings                  
  ============================== 
          */
-        public static final int eula_title=0x7f07003e;
+        public static final int eula_title=0x7f07003f;
         public static final int filter_equals_label=0x7f07000a;
         public static final int help_label=0x7f070010;
         public static final int info_menu_options=0x7f07001d;
-        public static final int info_note=0x7f070045;
+        public static final int info_note=0x7f070046;
         public static final int list_row_column_separator_label=0x7f07000e;
         public static final int menu_apply_filters=0x7f070024;
         public static final int menu_cancel=0x7f070021;
@@ -293,17 +294,17 @@ public final class R {
         public static final int no_entries=0x7f070004;
         public static final int notes_label=0x7f070008;
         public static final int restoreYesNo_message=0x7f07002e;
-        public static final int rights_reserved=0x7f070043;
+        public static final int rights_reserved=0x7f070044;
         public static final int save=0x7f070014;
         public static final int search_filters_label=0x7f070006;
         public static final int search_label=0x7f070009;
         public static final int set_filters_label=0x7f07000b;
-        public static final int set_preferences=0x7f07004a;
+        public static final int set_preferences=0x7f07004b;
         public static final int set_sorting_options_summary=0x7f070013;
-        public static final int sorting_options=0x7f070048;
+        public static final int sorting_options=0x7f070049;
         public static final int sorting_options_title=0x7f070012;
         public static final int submit_label=0x7f070011;
-        public static final int view_app_info_label=0x7f070044;
+        public static final int view_app_info_label=0x7f070045;
     }
     public static final class xml {
         public static final int appprefs=0x7f040000;
