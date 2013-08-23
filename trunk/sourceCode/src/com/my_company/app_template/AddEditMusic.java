@@ -1090,7 +1090,55 @@ public class AddEditMusic extends Activity {
 						&& !(strPubDate.equals(" "))) {
 					// format the date for proper formatting to be parsed into
 					// the date datatype
-					this.custDateFormatter(strPubDate);
+					if (strPubDate.length() == 10) {
+						txtalbumdate.setText(strPubDate);
+						strOrigPubDate = strPubDate;
+
+						// date string: 2010-08-15
+						String strYear = strPubDate.substring(6, 10);
+						String strMonth = strPubDate.substring(0, 2);
+						String strDay = strPubDate.substring(3, 5);
+
+						intYear = Integer.valueOf(strYear);
+						intMonth = (Integer.valueOf(strMonth) - 1);
+						intDay = Integer.valueOf(strDay);
+
+					}// end if
+					else {
+						// there was an issue with the date format
+
+						objDisplayAlertClass = new MyDisplayAlertClass(
+								AddEditMusic.this,
+								new CustAlrtMsgOptnListener(
+										CustAlrtMsgOptnListener.MessageCodes.ALERT_TYPE_MSG),
+								"Date Format Error", "The date " + strPubDate
+										+ " is not in the format MM/DD/YYYY");
+
+						// create date instance for today
+						Date today = new Date();
+
+						// create the date formatter
+						SimpleDateFormat dateFormatter = new SimpleDateFormat(
+								getString(R.string.DATE_FORMAT_ISO8601));
+
+						// format the date into a formatted date-string.
+						String strCustChkDate = dateFormatter.format(today);
+
+						// cleanup the dateformatter object
+						dateFormatter = null;
+
+						txtalbumdate.setText(strCustChkDate);
+						strOrigPubDate = strCustChkDate;
+
+						String strYear = strCustChkDate.substring(6, 10);
+						String strMonth = strCustChkDate.substring(0, 2);
+						String strDay = strCustChkDate.substring(3, 5);
+						
+						// 2009-10-02
+						intYear = Integer.valueOf(strYear);
+						intMonth = (Integer.valueOf(strMonth) - 1);
+						intDay = Integer.valueOf(strDay);
+					}// end if (strPubDate.length() == 10)
 				}// end if ((strPubDate != null) && ...
 				else {
 					// no date has been set
